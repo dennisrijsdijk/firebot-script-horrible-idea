@@ -1,13 +1,51 @@
 import { Firebot } from "@crowbartools/firebot-custom-scripts-types";
+import { AngularJsFactory, AngularJsPage, UIExtension } from "./extension-types";
+import { UIExtensionManager } from "./ui-extension-manager";
 
 interface Params {
   message: string;
 }
 
+const superCoolService: AngularJsFactory = {
+  name: "superCoolService",
+  function: () => {
+    const service: any = { };
+
+    service.veryCoolNumber = () => Math.floor(Math.random() * 100);
+
+    return service;
+  }
+};
+
+const page: AngularJsPage = {
+  id: "superCoolPage",
+  name: "Super Cool Page™️",
+  icon: "fa-trademark",
+  type: "angularjs",
+  template: `
+    <div>
+      <div>
+        Today's Cool Number is: {{coolNumber}}
+      </div>
+    </div>
+  `,
+  controller: ($scope: any, superCoolService: any) => {
+    $scope.coolNumber = superCoolService.veryCoolNumber();
+  }
+}
+
+const extension: UIExtension = {
+  id: "veryCoolExtension",
+  pages: [ page ],
+  providers: {
+    factories: [ superCoolService ]
+  }
+}
+
 const script: Firebot.CustomScript<Params> = {
   getScriptManifest: () => {
     return {
-      name: "Starter Custom Script",
+      name: "UI Page Test",
       description: "A starter custom script for build",
       author: "SomeDev",
       version: "1.0",
@@ -26,8 +64,9 @@ const script: Firebot.CustomScript<Params> = {
     };
   },
   run: (runRequest) => {
-    const { logger } = runRequest.modules;
-    logger.info(runRequest.parameters.message);
+    runRequest.modules.logger.info(runRequest.parameters.message);
+    const uiExtensionManager = runRequest.modules.uiExtensionManager as UIExtensionManager;
+    uiExtensionManager.registerUIExtension(extension);
   },
 };
 

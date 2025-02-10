@@ -1,6 +1,6 @@
 {
   "name": "firebot-custom-script-starter",
-  "scriptOutputName": "starterScript",
+  "scriptOutputName": "ui-pages-test",
   "version": "1.0.0",
   "description": "A starter Firebot custom script",
   "main": "",
