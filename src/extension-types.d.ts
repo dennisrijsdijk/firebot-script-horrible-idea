@@ -25,7 +25,7 @@ export type AngularJsFactory = {
 
 export type AngularJsComponent = {
     name: string;
-    binding: Record<string, string>;
+    bindings: Record<string, string>;
     template: string;
     transclude?: boolean | string | {[slot: string]: string};
     // eslint-disable-next-line @typescript-eslint/ban-types
